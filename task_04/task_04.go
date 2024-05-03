@@ -26,10 +26,10 @@ func main() {
 			fmt.Fscan(in, &time)
 			runners[j] = time
 		}
-		places := resolveTask(runners)
+		result := resolveTask(runners)
 
-		for _, p := range places {
-			fmt.Fprint(out, p)
+		for _, p := range result {
+			fmt.Fprint(out, p, " ")
 		}
 		fmt.Fprintln(out)
 	}
@@ -37,12 +37,25 @@ func main() {
 
 func resolveTask(runners []int) []int {
 
-	places := make([]int, len(runners))
+	//places := make([]int, len(runners))
 
 	sorted := sortArray(runners)
-	fmt.Println(sorted)
 
-	return places
+	places := assignPlaces(sorted)
+
+	result := checkPlaces(runners, places)
+
+	return result
+}
+
+func checkPlaces(runners []int, places map[int]int) []int {
+
+	result := make([]int, len(runners))
+	for i, v := range runners {
+		result[i] = places[v]
+	}
+
+	return result
 }
 
 func sortArray(runners []int) []int {
@@ -63,11 +76,9 @@ func assignPlaces(sorted []int) map[int]int {
 			if sorted[i]-sorted[i-1] > 1 {
 				curplace = curplace + buf
 				buf = 0
-			} else {
-				buf++
 			}
 		}
-
+		buf++
 		places[sorted[i]] = curplace
 	}
 
